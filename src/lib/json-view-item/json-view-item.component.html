@@ -3,7 +3,7 @@
     <span
       class="toggler"
       [ngClass]="{ collapse: isOpen(), expand: !isOpen() }"
-      [style.visibility]="hasChildren() ? 'visible' : 'hidden'"
+      [style.visibility]="_hasChildren() ? 'visible' : 'hidden'"
     ></span>
     @if (key()) {
     <span class="key">
@@ -24,9 +24,9 @@
       }
     </span>
   </a>
-  @if (hasChildren() && isOpen()) {
+  @if (_hasChildren() && isOpen()) {
   <div class="children">
-    @for (_key of childrenKeys(); track _key) {
+    @for (_key of _childrenKeys(); track _key) {
     <nxt-json-view-item
       [data]="data()[_key]"
       [key]="_key"
