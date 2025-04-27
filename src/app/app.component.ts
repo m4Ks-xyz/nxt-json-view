@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { JsonViewModule } from '../lib/json-view.module';
+import { JsonViewComponent } from '../lib/json-view/json-view.component';
 
 @Component({
   selector: 'app-root',
-  imports: [JsonViewModule],
+  imports: [JsonViewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
