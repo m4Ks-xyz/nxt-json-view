@@ -1,0 +1,50 @@
+.json-view {
+  a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .toggler {
+    display: block;
+    width: 1em;
+    padding: 0;
+    float: left;
+    text-align: center;
+  }
+
+  .collapse:before {
+    content: "-";
+  }
+
+  .expand:before {
+    content: "+";
+  }
+
+  .key {
+    color: var(--nxt-json-view-color-key, #92278f);
+  }
+
+  .value {
+    color: var(--nxt-json-view-color-value, #000000);
+
+    .string {
+      color: var(--nxt-json-view-color-string, #3ab54a);
+    }
+
+    .number {
+      color: var(--nxt-json-view-color-number, #25aae2);
+    }
+
+    .boolean {
+      color: var(--nxt-json-view-color-boolean, #aa0d91);
+    }
+
+    .null {
+      color: var(--nxt-json-view-color-null, #f1592a);
+    }
+  }
+
+  .children {
+    margin-left: 1em;
+  }
+}
