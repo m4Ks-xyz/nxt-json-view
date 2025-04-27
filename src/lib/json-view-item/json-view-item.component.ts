@@ -64,32 +64,6 @@ export class JsonViewItemComponent {
     return 'null';
   });
 
-  readonly isObject = computed(() => {
-    const data = this.data();
-    if (isObject(data)) {
-      return true;
-    }
-    return false;
-  });
-
-  readonly isArray = computed(() => {
-    const data = this.data();
-    if (isArray(data)) {
-      return true;
-    }
-    return false;
-  });
-
-  readonly value = computed(() => {
-    const data = this.data();
-
-    if (data === null) {
-      return 'null';
-    } else {
-      return data;
-    }
-  });
-
   toggle() {
     if (this.childrenKeys()?.length) {
       this.isOpen.set(!this.isOpen());

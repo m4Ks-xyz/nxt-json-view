@@ -2,7 +2,7 @@
   <a (click)="toggle()" tabindex="0" (keydown.space)="toggle()">
     <span
       class="toggler"
-      [class]="{ collapse: isOpen(), expand: !isOpen() }"
+      [class]="isOpen() ? 'collapse' : 'expand'"
       [style.visibility]="hasChildren() ? 'visible' : 'hidden'"
     ></span>
     @if (key()) {
@@ -20,7 +20,7 @@
         }
       </span>
       } @if (!(valueType() === 'Object') && valueType()) {
-      <span [class]="valueType()">{{ value() }}</span>
+      <span [class]="valueType()">{{ data() === null ? "null" : data() }}</span>
       }
     </span>
   </a>
