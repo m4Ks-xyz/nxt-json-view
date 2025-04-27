@@ -1,4 +1,10 @@
-import { Component, Input, OnInit, ViewEncapsulation, input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  effect,
+  input,
+} from '@angular/core';
 import { LevelLabels } from '../utils/interfaces';
 import {
   isArray,
@@ -18,17 +24,18 @@ import {
   standalone: false,
 })
 export class JsonViewItemComponent implements OnInit {
-  private _data?: any;
-  @Input()
-  set data(data: any | undefined) {
-    this._data = data;
-    if (this.isInit) {
-      this.init();
-    }
+  constructor() {
+    effect(() => {
+      this.data();
+      if (this.isInit) {
+        this.init();
+      }
+    });
   }
-  get data(): any | undefined {
-    return this._data;
-  }
+
+  /** JSON data, any valid JSON object */
+  readonly data = input<any>();
+
   readonly key = input<string>();
   readonly level = input<number>(0);
   readonly levelOpen = input<number>();
@@ -72,8 +79,9 @@ export class JsonViewItemComponent implements OnInit {
   }
 
   childrenKeysHandle() {
-    if (isObject(this.data)) {
-      this.childrenKeys = Object.keys(this.data);
+    const data = this.data();
+    if (isObject(data)) {
+      this.childrenKeys = Object.keys(data);
       if (this.childrenKeys && this.childrenKeys.length) {
         this.hasChildren = true;
       }
@@ -81,10 +89,11 @@ export class JsonViewItemComponent implements OnInit {
   }
 
   dataHandle() {
-    if (isObject(this.data)) {
+    const data = this.data();
+    if (isObject(data)) {
       this.isObject = true;
       this.dataType = 'Object';
-      if (isArray(this.data)) {
+      if (isArray(data)) {
         this.isArray = true;
         this.dataType = 'Array';
       }
@@ -93,14 +102,14 @@ export class JsonViewItemComponent implements OnInit {
         this.dataType = this._levelLabels[key];
       }
     } else {
-      this.value = this.data;
-      if (isString(this.data)) {
+      this.value = data;
+      if (isString(data)) {
         this.valueType = 'string';
-      } else if (isNumber(this.data)) {
+      } else if (isNumber(data)) {
         this.valueType = 'number';
-      } else if (isBoolean(this.data)) {
+      } else if (isBoolean(data)) {
         this.valueType = 'boolean';
-      } else if (null === this.data) {
+      } else if (null === data) {
         this.valueType = 'null';
         this.value = 'null';
       }

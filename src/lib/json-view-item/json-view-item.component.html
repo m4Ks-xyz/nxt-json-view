@@ -16,7 +16,7 @@
       <span>
         {{ dataType }}
         @if (isArray) {
-        <span>[ {{ $any(data)?.length }} ]</span>
+        <span>[ {{ $any(data())?.length }} ]</span>
         }
       </span>
       } @if (!isObject && valueType) {
@@ -28,7 +28,7 @@
   <div class="children">
     @for (_key of childrenKeys; track _key) {
     <nxt-json-view-item
-      [data]="data[_key]"
+      [data]="data()[_key]"
       [key]="_key"
       [level]="level() + 1"
       [levelOpen]="levelOpen()"
