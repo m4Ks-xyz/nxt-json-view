@@ -2,8 +2,8 @@
   <a (click)="toggle()" tabindex="0" (keydown.space)="toggle()">
     <span
       class="toggler"
-      [ngClass]="{ collapse: isOpen(), expand: !isOpen() }"
-      [style.visibility]="_hasChildren() ? 'visible' : 'hidden'"
+      [class]="{ collapse: isOpen(), expand: !isOpen() }"
+      [style.visibility]="hasChildren() ? 'visible' : 'hidden'"
     ></span>
     @if (key()) {
     <span class="key">
@@ -12,24 +12,24 @@
     </span>
     }
     <span class="value">
-      @if (isObject()) {
+      @if (valueType() === 'Object') {
       <span>
-        {{ dataType() }}
-        @if (isArray()) {
+        {{ valueType() }}
+        @if (valueType() === 'Array') {
         <span>[ {{ $any(data())?.length }} ]</span>
         }
       </span>
-      } @if (!isObject() && valueType()) {
-      <span [ngClass]="valueType()">{{ value() }}</span>
+      } @if (!(valueType() === 'Object') && valueType()) {
+      <span [class]="valueType()">{{ value() }}</span>
       }
     </span>
   </a>
-  @if (_hasChildren() && isOpen()) {
+  @if (hasChildren() && isOpen()) {
   <div class="children">
-    @for (_key of _childrenKeys(); track _key) {
+    @for (key of childrenKeys(); track key) {
     <nxt-json-view-item
-      [data]="data()[_key]"
-      [key]="_key"
+      [data]="data()[key]"
+      [key]="key"
       [level]="level() + 1"
       [levelOpen]="levelOpen()"
       [levelLabels]="levelLabels()"

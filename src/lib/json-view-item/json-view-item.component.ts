@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,7 +12,6 @@ import {
   isNumber,
   isObject,
   isString,
-  isUndefined,
 } from '../utils/utils';
 
 /** @internal */
@@ -21,7 +19,6 @@ import {
   selector: 'nxt-json-view-item',
   templateUrl: './json-view-item.component.html',
   styleUrls: ['./json-view-item.component.scss'],
-  imports: [NgClass],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JsonViewItemComponent {
@@ -34,31 +31,15 @@ export class JsonViewItemComponent {
 
   isOpen = signal<boolean>(false);
 
-  readonly _levelLabels = computed(() => {
-    const levelLabels = this.levelLabels();
-    if (levelLabels !== undefined) {
-      return levelLabels[this.level()] || {};
-    }
-    return {};
-  });
-
-  readonly _levelOpen = computed(() => {
-    const levelOpen = this.levelOpen();
-    if (isUndefined(levelOpen)) {
-      return undefined;
-    }
-    return levelOpen > 0 ? levelOpen : undefined;
-  });
-
-  readonly _hasChildren = computed(() => {
+  readonly hasChildren = computed(() => {
     const data = this.data();
     if (isObject(data)) {
-      return this._childrenKeys() && this._childrenKeys()!.length > 0;
+      return this.childrenKeys() && this.childrenKeys()!.length > 0;
     }
     return false;
   });
 
-  readonly _childrenKeys = computed(() => {
+  readonly childrenKeys = computed(() => {
     const data = this.data();
     return isObject(data) ? Object.keys(data) : undefined;
   });
@@ -71,32 +52,14 @@ export class JsonViewItemComponent {
       } else {
         return 'Object';
       }
-    } else {
-      if (isString(data)) {
-        return 'string';
-      } else if (isNumber(data)) {
-        return 'number';
-      } else if (isBoolean(data)) {
-        return 'boolean';
-      } else if (null === data) {
-        return 'null';
-      }
-    }
-    return 'null';
-  });
-
-  readonly dataType = computed(() => {
-    const data = this.data();
-
-    if (isObject(data)) {
-      if (isArray(data)) {
-        return 'Array';
-      }
-      const key = this.key();
-      if (key && this._levelLabels()[key]) {
-        return this._levelLabels()[key];
-      }
-      return 'Object';
+    } else if (isString(data)) {
+      return 'string';
+    } else if (isNumber(data)) {
+      return 'number';
+    } else if (isBoolean(data)) {
+      return 'boolean';
+    } else if (null === data) {
+      return 'null';
     }
     return 'null';
   });
@@ -128,9 +91,8 @@ export class JsonViewItemComponent {
   });
 
   toggle() {
-    if (!(this._childrenKeys() && this._childrenKeys()!.length)) {
-      return;
+    if (this.childrenKeys()?.length) {
+      this.isOpen.set(!this.isOpen());
     }
-    this.isOpen.set(!this.isOpen());
   }
 }
