@@ -5,6 +5,7 @@ import {
   OnInit,
   effect,
   input,
+  signal,
 } from '@angular/core';
 import { LevelLabels } from '../utils/interfaces';
 import {
@@ -28,7 +29,7 @@ export class JsonViewItemComponent implements OnInit {
   constructor() {
     effect(() => {
       this.data();
-      if (this.isInit) {
+      if (this.isInit()) {
         this.init();
       }
     });
@@ -36,26 +37,25 @@ export class JsonViewItemComponent implements OnInit {
 
   /** JSON data, any valid JSON object */
   readonly data = input<any>();
-
   readonly key = input<string>();
   readonly level = input<number>(0);
   readonly levelOpen = input<number>();
   readonly levelLabels = input<LevelLabels>();
 
-  isOpen: boolean = false;
-  childrenKeys?: string[];
-  hasChildren: boolean = false;
-  dataType?: string;
-  value: any;
-  valueType?: string;
-  isObject: boolean = false;
-  isArray: boolean = false;
-  isInit: boolean = false;
-  _levelLabels: { [key: string]: string } = {};
+  isOpen = signal<boolean>(false);
+  childrenKeys = signal<string[] | undefined>(undefined);
+  hasChildren = signal<boolean>(false);
+  dataType = signal<string | undefined>(undefined);
+  value = signal<any>(undefined);
+  valueType = signal<string | undefined>(undefined);
+  isObject = signal<boolean>(false);
+  isArray = signal<boolean>(false);
+  isInit = signal<boolean>(false);
+  _levelLabels = signal<{ [key: string]: string }>({});
 
   ngOnInit() {
     this.init();
-    this.isInit = true;
+    this.isInit.set(true);
   }
 
   init() {
@@ -68,23 +68,23 @@ export class JsonViewItemComponent implements OnInit {
   levelLabelHandle() {
     const levelLabels = this.levelLabels();
     if (levelLabels !== undefined) {
-      this._levelLabels = levelLabels[this.level()] || {};
+      this._levelLabels.set(levelLabels[this.level()] || {});
     }
   }
 
   levelOpenHandle() {
     const levelOpen = this.levelOpen();
     if (!isUndefined(levelOpen) && this.level() <= levelOpen) {
-      this.isOpen = true;
+      this.isOpen.set(true);
     }
   }
 
   childrenKeysHandle() {
     const data = this.data();
     if (isObject(data)) {
-      this.childrenKeys = Object.keys(data);
-      if (this.childrenKeys && this.childrenKeys.length) {
-        this.hasChildren = true;
+      this.childrenKeys.set(Object.keys(data));
+      if (this.childrenKeys() && this.childrenKeys()!.length) {
+        this.hasChildren.set(true);
       }
     }
   }
@@ -92,35 +92,35 @@ export class JsonViewItemComponent implements OnInit {
   dataHandle() {
     const data = this.data();
     if (isObject(data)) {
-      this.isObject = true;
-      this.dataType = 'Object';
+      this.isObject.set(true);
+      this.dataType.set('Object');
       if (isArray(data)) {
-        this.isArray = true;
-        this.dataType = 'Array';
+        this.isArray.set(true);
+        this.dataType.set('Array');
       }
       const key = this.key();
-      if (key && this._levelLabels[key]) {
-        this.dataType = this._levelLabels[key];
+      if (key && this._levelLabels()[key]) {
+        this.dataType.set(this._levelLabels()[key]);
       }
     } else {
-      this.value = data;
+      this.value.set(data);
       if (isString(data)) {
-        this.valueType = 'string';
+        this.valueType.set('string');
       } else if (isNumber(data)) {
-        this.valueType = 'number';
+        this.valueType.set('number');
       } else if (isBoolean(data)) {
-        this.valueType = 'boolean';
+        this.valueType.set('boolean');
       } else if (null === data) {
-        this.valueType = 'null';
-        this.value = 'null';
+        this.valueType.set('null');
+        this.value.set('null');
       }
     }
   }
 
   toggle() {
-    if (!(this.childrenKeys && this.childrenKeys.length)) {
+    if (!(this.childrenKeys() && this.childrenKeys()!.length)) {
       return;
     }
-    this.isOpen = !this.isOpen;
+    this.isOpen.set(!this.isOpen());
   }
 }
