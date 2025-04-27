@@ -1,11 +1,12 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { JsonViewItemComponent } from '../json-view-item/json-view-item.component';
 import { LevelLabels } from '../utils/interfaces';
 
 @Component({
   selector: 'nxt-json-view',
   templateUrl: './json-view.component.html',
-  encapsulation: ViewEncapsulation.Emulated,
-  standalone: false,
+  imports: [JsonViewItemComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JsonViewComponent {
   /** JSON data, any valid JSON object */

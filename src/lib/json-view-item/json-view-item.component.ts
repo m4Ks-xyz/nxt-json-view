@@ -1,7 +1,8 @@
+import { NgClass } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
-  ViewEncapsulation,
   effect,
   input,
 } from '@angular/core';
@@ -20,8 +21,8 @@ import {
   selector: 'nxt-json-view-item',
   templateUrl: './json-view-item.component.html',
   styleUrls: ['./json-view-item.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
-  standalone: false,
+  imports: [NgClass],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JsonViewItemComponent implements OnInit {
   constructor() {
